@@ -28,7 +28,7 @@ def home() -> None:
                 st.write(f"{model_name} – Accuracy: :red[{info['test_accuracy']:.2f}]")
     else:
         st.info("No models have been trained yet.")
-    if st.button("Start Training New Model", use_container_width=True):
+    if st.button("Start Training New Model", use_container_width=True, type='primary'):
         st.session_state.page = "Train"
         st.rerun()
 
@@ -50,7 +50,21 @@ def train_model() -> None:
         st.error("Validation split must be in the range [0, 1].")
         return
     
-    if st.button("Start Training"):
+    if not dataset_file:
+        st.subheader("NOTE:")
+        st.write("Your files directory structure should be as follows")
+        st.code("""
+                    file.zip  
+                        - top_directory  
+                            - class_1_dir  
+                                - images  
+                            - class_2_dir  
+                                - images  
+                            - ...  
+                """)
+        return
+    
+    if st.button("Start Training", type='primary', use_container_width=True):
         if dataset_file is None:
             st.error("Please upload a dataset file.")
             return
@@ -81,12 +95,12 @@ def train_model() -> None:
                 st.error("Error creating datasets: " + str(e))
                 return
 
-            num_classes = len(train_data.class_names)
-            st.write(f"Found {len(train_data.class_names)} classes:", train_data.class_names)
-
             prog = 0
             progress_bar = st.progress(prog)
             status_text = st.empty()
+            
+            num_classes = len(train_data.class_names)
+            st.write(f"Found {len(train_data.class_names)} classes:", train_data.class_names)
             
             model_types = ["Basic CNN Model", "Block CNN Model", "Batch CNN Model"]
             results = {}
@@ -169,7 +183,7 @@ def train_model() -> None:
                         - class_2_dir  
                             - images  
                         - ...  
-                """)
+            """)
     
 def results() -> None:
     st.title("Training Results")
@@ -216,10 +230,10 @@ def results() -> None:
     
     col3, col4 = st.columns(2)
     with col3:
-        if st.button("Home", use_container_width=True):
+        if st.button("Home", use_container_width=True, type='primary'):
             st.session_state.page = "Home"
             st.rerun()
     with col4:
-        if st.button("Back to Training", use_container_width=True):
+        if st.button("Back to Training", use_container_width=True, type='primary'):
             st.session_state.page = "Train"
             st.rerun()

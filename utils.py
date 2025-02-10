@@ -51,11 +51,11 @@ def highlight_incorrect(row):
     for col in row.index:
         if col == 'Predicted Label':
             if row['True Label'] != row['Predicted Label']:
-                styles.append('color: red')
+                styles.append('color: red; background-color: rgb(245, 245, 245)')
             else:
-                styles.append('color: green')
+                styles.append('color: green; background-color: rgb(245, 245, 245)')
         else:
-            styles.append('')
+            styles.append('background-color: rgb(245, 245, 245)')
     return styles
 
 def style_df(df):
@@ -63,13 +63,10 @@ def style_df(df):
     
 def css():
     st.markdown("""
-    <style>
-    .st-cm, .st-bk {
-        background-color: orange;
-        color: black;
-        font-weight: bold;
+    <style>    
+    .token.token.operator {
+        color: white;
     }
-    
 	.stTabs [data-baseweb="tab"], .st-emotion-cache-14553y9 {
 		height: 50px;
         font-size: 20px;
