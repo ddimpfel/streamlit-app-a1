@@ -30,8 +30,8 @@ def extract_data(tmp_dir, dataset_file):
     return os.path.join(tmp_dir, extracted_dirs[0])
     
 
-def save_model(model_name, model) -> None:
-    """Save a Keras model to a temporary file and provide a download button."""
+def save_model(model_name, model) -> bytes:
+    """Save a Keras model to a temporary file."""
     with tempfile.NamedTemporaryFile(suffix=".h5", delete=False) as tmp_file:
         tmp_path = tmp_file.name
     # Save the model in H5 format
@@ -39,12 +39,7 @@ def save_model(model_name, model) -> None:
     with open(tmp_path, "rb") as f:
         model_bytes = f.read()
     os.remove(tmp_path)
-    st.download_button(
-        label=f"Download {model_name} Model",
-        data=model_bytes,
-        file_name=f"{model_name}.h5",
-        mime="application/octet-stream"
-    )
+    return model_bytes
     
 def highlight_incorrect(row):
     styles = []

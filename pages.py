@@ -197,9 +197,9 @@ def results() -> None:
     tabs = st.tabs(model_names)
 
     # Display each models training statistics per tab
-    for i, mtype in enumerate(model_names):
+    for i, model_name in enumerate(model_names):
         with tabs[i]:
-            info = st.session_state.models[mtype]
+            info = st.session_state.models[model_name]
             
             col1, col2 = st.columns(2)
             with col1:
@@ -212,8 +212,14 @@ def results() -> None:
                     st.write(f"Test Accuracy: :red[{info['test_accuracy']:.2f}]")
                 st.write(f"Total Parameters: {info.get('param_count', 'N/A')}")
             
-            if st.button(f"Save {mtype}", key=f"save_{mtype}", type="primary"):
-                save_model(mtype, info["model"])
+            model_bytes = save_model(model_name, info["model"])
+            st.download_button(
+                label=f"Download {model_name} (.h5 file)",
+                data=model_bytes,
+                file_name=f"{model_name}.h5",
+                mime="application/octet-stream",
+                type='primary'
+            )
             
             st.write("### Individual Classifications Table")
             styled_df = info["results_df_styled"]
